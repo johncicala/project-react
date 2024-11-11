@@ -4,6 +4,7 @@ import Dinner from "./pages/Dinner";
 import Drinks from "./pages/Drinks";
 import Job from "./pages/Job";
 import Review from "./pages/Review";
+import Contact from "./pages/Contact"
 import Footer from "./components/Footer"
 import { Routes, Route } from "react-router-dom";
 
