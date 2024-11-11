@@ -14,7 +14,7 @@ export default function Home() {
                 <a href="drinks">Drink Menu</a>
                 <a href="review">Leave a Review</a>
                 <a href="job">Job Opportunities</a>
-                <a href="contact.html">Contact Us</a>
+                <a href="contact">Contact Us</a>
             </nav>
 
             <div className="container">

@@ -1,3 +1,5 @@
+import DrinkItems from "../components/DrinkItems";
+
 export default function Drinks () {
     return (
     <>
@@ -15,12 +17,13 @@ export default function Drinks () {
                 <a href="drinks">Drink Menu</a>
                 <a href="review">Leave a Review</a>
                 <a href="job">Job Opportunities</a>
-                <a href="contact.html">Contact Us</a>
+                <a href="contact">Contact Us</a>
             </nav>
 
 <div class="container">
     <h2>Drink Menu</h2>
     <div id="menu-grid" class="menu-grid">
+        <DrinkItems />
     </div>
 </div>
 

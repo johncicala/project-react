@@ -17,6 +17,7 @@ function App() {
             <Route path = "drinks" element = {<Drinks />} />
             <Route path = "job" element = {<Job />} />
             <Route path = "review" element = {<Review />} />
+            <Route path = "contact" element = {<Contact />} />
         </Routes>
         <Footer />
       

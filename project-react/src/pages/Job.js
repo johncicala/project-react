@@ -16,7 +16,7 @@ export default function Job () {
         <a href="drinks">Drink Menu</a>
         <a href="review">Leave a Review</a>
         <a href="job">Job Opportunities</a>
-        <a href="contact.html">Contact Us</a>
+        <a href="contact">Contact Us</a>
     </nav>
 
     <div class="container2">

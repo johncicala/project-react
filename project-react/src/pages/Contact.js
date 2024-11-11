@@ -1,10 +1,9 @@
-import DinnerItems from "../components/DinnerItems";
+export default function Contact () {
 
-export default function Dinner() {
     return (
         <>
             <header>
-                <h1>Dinner Menu</h1>
+                <h1>Contact Us!</h1>
                 <div className="hamburger" id="hamburger">
                     &#9776;
                 </div>
@@ -20,12 +19,9 @@ export default function Dinner() {
             </nav>
 
             <div className="container">
-                <h2>Dinner Menu</h2>
-                <div id="menu-grid" className="menu-grid">
-                <DinnerItems />
-                </div>
+                <p>Contact us coming soon!</p>
             </div>
 
         </>
-    );
+);
 }

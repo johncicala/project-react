@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from 'react';
 
-export default function DinnerItems() {
-    const [dinnerItems, setDinnerItems] = useState([]);
+export default function DrinkItems() {
+    const [drinkItems, setDrinkItems] = useState([]);
 
-    const fetchDinnerItems = async () => {
+    const fetchDrinkItems = async () => {
         try {
-            const response = await fetch("https://project-react-backend-2.onrender.com/api/dinnerItems");
+            const response = await fetch("https://project-react-backend-2.onrender.com/api/drinkItems");
             if (!response.ok) {
-                throw new Error("Failed to fetch dinner items");
+                throw new Error("Failed to fetch drink items");
             }
             const data = await response.json();
-            setDinnerItems(data);
+            setDrinkItems(data);
         } catch (error) {
-            console.error("Error fetching dinner items:", error);
+            console.error("Error fetching drink items:", error);
         }
     };
 
     useEffect(() => {
-        fetchDinnerItems();
+        fetchDrinkItems();
     }, []);
 
     return (
         <div className="menu-grid">
-            {dinnerItems.length > 0 ? (
-                dinnerItems.map((item) => (
+            {drinkItems.length > 0 ? (
+                drinkItems.map((item) => (
                     <div key={item._id} className="menu-item">
                         <h3>{item.name}</h3>
                         <img src={item.img_name} alt={item.name} className="menu-img" />
