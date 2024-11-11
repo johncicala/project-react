@@ -20,7 +20,7 @@ export default function Dinner() {
             <div className="container">
                 <h2>Dinner Menu</h2>
                 <div id="menu-grid" className="menu-grid">
-                   
+                <DinnerItems />
                 </div>
             </div>
 
