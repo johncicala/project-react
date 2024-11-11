@@ -5,7 +5,7 @@ export default function DinnerItems() {
 
     const fetchDinnerItems = async () => {
         try {
-            const response = await fetch("http://localhost:3000/api/dinnerItems");
+            const response = await fetch("https://project-react-backend-2.onrender.com/api/DinnerItems");
             if (!response.ok) {
                 throw new Error("Failed to fetch dinner items");
             }
