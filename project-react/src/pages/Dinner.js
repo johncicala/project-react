@@ -1,4 +1,4 @@
-import DinnerItems from "components/DinnerItems";
+import DinnerItems from "./DinnerItems";
 
 export default function Dinner() {
     return (
