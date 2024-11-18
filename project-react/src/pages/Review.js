@@ -1,3 +1,5 @@
+import ReviewItems from "../components/ReviewItems";
+
 export default function Review () {
 
     return (
@@ -19,7 +21,7 @@ export default function Review () {
             </nav>
 
             <div className="container">
-                <p>Reviews coming soon!</p>
+                <ReviewItems />
             </div>
 
         </>
