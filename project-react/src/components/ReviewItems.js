@@ -23,7 +23,7 @@ export default function ReviewItems() {
     event.preventDefault();
     setError('');
     setSuccess('');
-
+  
     if (name.length < 3 || name.length > 50) {
       setError("Name must be between 3 and 50 characters.");
       return;
@@ -32,27 +32,36 @@ export default function ReviewItems() {
       setError("Review must be between 5 and 500 characters.");
       return;
     }
-
+  
     try {
-      const response = await fetch(editId ? 
-        `https://project-react-backend-2.onrender.com/api/reviews/${editId}` : 
-        "https://project-react-backend-2.onrender.com/api/reviews", {
-        method: editId ? "PUT" : "POST",
+      const url = editId
+        ? `https://project-react-backend-2.onrender.com/api/reviews/${editId}`
+        : "https://project-react-backend-2.onrender.com/api/reviews";
+      const method = editId ? "PUT" : "POST";
+  
+      const response = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, review: reviewText }),
       });
-
+  
       const result = await response.json();
       if (!response.ok) throw new Error(result.error || "Failed to save review");
-
-      setSuccess(editId ? "Review updated successfully!" : "Review added successfully!");
+  
       if (editId) {
-        setReviews((prev) => prev.map((r) => (r.id === editId ? result.review : r)));
-        setEditId(null);
+        
+        setReviews((prevReviews) =>
+          prevReviews.map((r) =>
+            r.id === editId ? { ...r, name: result.review.name, review: result.review.review } : r
+          )
+        );
+        setSuccess("Review updated successfully!");
+        setEditId(null); 
       } else {
-        setReviews((prev) => [...prev, result.newReview]);
+        setReviews((prevReviews) => [...prevReviews, result.newReview]);
+        setSuccess("Review added successfully!");
       }
-
+  
       setName('');
       setReviewText('');
     } catch (error) {
