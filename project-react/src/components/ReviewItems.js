@@ -6,6 +6,9 @@ export default function ReviewItems() {
     const [reviewText, setReviewText] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [editingId, setEditingId] = useState(null);
+    const [editName, setEditName] = useState('');
+    const [editText, setEditText] = useState('');
 
     const fetchReviews = async () => {
         try {
@@ -54,6 +57,68 @@ export default function ReviewItems() {
         }
     };
 
+    const handleEdit = (item) => {
+        setEditingId(item._id);
+        setEditName(item.name);
+        setEditText(item.review);
+    };
+
+    const handleEditSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setSuccess('');
+
+        if (editName.length < 3 || editName.length > 50) {
+            setError("Name must be between 3 and 50 characters.");
+            return;
+        }
+        if (editText.length < 5 || editText.length > 500) {
+            setError("Review must be between 5 and 500 characters.");
+            return;
+        }
+
+        try {
+            const response = await fetch(`https://project-react-backend-2.onrender.com/api/reviews/${editingId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name: editName, review: editText }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || "Failed to edit review");
+            }
+
+            setSuccess("Review updated successfully!");
+            setReviews((prevReviews) =>
+                prevReviews.map((r) => (r._id === editingId ? result.updatedReview : r))
+            );
+            setEditingId(null);
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`https://project-react-backend-2.onrender.com/api/reviews/${id}`, {
+                method: "DELETE",
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || "Failed to delete review");
+            }
+
+            setSuccess("Review deleted successfully!");
+            setReviews((prevReviews) => prevReviews.filter((r) => r._id !== id));
+        } catch (error) {
+            setError(error.message);
+        }
+    };
+
     useEffect(() => {
         fetchReviews();
     }, []);
@@ -85,12 +150,35 @@ export default function ReviewItems() {
                 {success && <p className="success">{success}</p>}
             </form>
 
-            
+            {editingId && (
+                <form onSubmit={handleEditSubmit} className="edit-form">
+                    <div>
+                        <input
+                            type="text"
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <textarea
+                            value={editText}
+                            onChange={(e) => setEditText(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit">Save Changes</button>
+                    <button onClick={() => setEditingId(null)}>Cancel</button>
+                </form>
+            )}
+
             {reviews.length > 0 ? (
-                reviews.map((item, index) => (
-                    <div key={index} className="review-item">
+                reviews.map((item) => (
+                    <div key={item._id} className="review-item">
                         <h3>{item.name}</h3>
                         <p>{item.review}</p>
+                        <button onClick={() => handleEdit(item)}>Edit</button>
+                        <button onClick={() => handleDelete(item._id)}>Delete</button>
                     </div>
                 ))
             ) : (
