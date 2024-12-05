@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
 export default function ReviewItems() {
     const [reviews, setReviews] = useState([]);
@@ -6,9 +6,7 @@ export default function ReviewItems() {
     const [reviewText, setReviewText] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const [editingId, setEditingId] = useState(null);
-    const [editName, setEditName] = useState('');
-    const [editText, setEditText] = useState('');
+    const [image, setImage] = useState(null);
 
     const fetchReviews = async () => {
         try {
@@ -35,11 +33,17 @@ export default function ReviewItems() {
             return;
         }
 
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("review", reviewText);
+        if (image) {
+            formData.append("image", image);
+        }
+
         try {
             const response = await fetch("https://project-react-backend-2.onrender.com/api/reviews", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name, review: reviewText }),
+                body: formData,
             });
 
             const result = await response.json();
@@ -52,71 +56,14 @@ export default function ReviewItems() {
             setReviews((prevReviews) => [...prevReviews, result.newReview]);
             setName('');
             setReviewText('');
+            setImage(null);
         } catch (error) {
             setError(error.message);
         }
     };
 
-    const handleEdit = (item) => {
-        setEditingId(item._id);
-        setEditName(item.name);
-        setEditText(item.review);
-    };
-
-    const handleEditSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
-        setSuccess('');
-
-        if (editName.length < 3 || editName.length > 50) {
-            setError("Name must be between 3 and 50 characters.");
-            return;
-        }
-        if (editText.length < 5 || editText.length > 500) {
-            setError("Review must be between 5 and 500 characters.");
-            return;
-        }
-
-        try {
-            const response = await fetch(`https://project-react-backend-2.onrender.com/api/reviews/${editingId}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: editName, review: editText }),
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.error || "Failed to edit review");
-            }
-
-            setSuccess("Review updated successfully!");
-            setReviews((prevReviews) =>
-                prevReviews.map((r) => (r._id === editingId ? result.updatedReview : r))
-            );
-            setEditingId(null);
-        } catch (error) {
-            setError(error.message);
-        }
-    };
-
-    const handleDelete = async (id) => {
-        try {
-            const response = await fetch(`https://project-react-backend-2.onrender.com/api/reviews/${id}`, {
-                method: "DELETE",
-            });
-
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.error || "Failed to delete review");
-            }
-
-            setSuccess("Review deleted successfully!");
-            setReviews((prevReviews) => prevReviews.filter((r) => r._id !== id));
-        } catch (error) {
-            setError(error.message);
-        }
+    const handleImageChange = (e) => {
+        setImage(e.target.files[0]);
     };
 
     useEffect(() => {
@@ -145,40 +92,20 @@ export default function ReviewItems() {
                         required
                     />
                 </div>
+                <div>
+                    <input type="file" accept="image/*" onChange={handleImageChange} />
+                </div>
                 <button type="submit">Submit Review</button>
                 {error && <p className="error">{error}</p>}
                 {success && <p className="success">{success}</p>}
             </form>
-
-            {editingId && (
-                <form onSubmit={handleEditSubmit} className="edit-form">
-                    <div>
-                        <input
-                            type="text"
-                            value={editName}
-                            onChange={(e) => setEditName(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div>
-                        <textarea
-                            value={editText}
-                            onChange={(e) => setEditText(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <button type="submit">Save Changes</button>
-                    <button onClick={() => setEditingId(null)}>Cancel</button>
-                </form>
-            )}
 
             {reviews.length > 0 ? (
                 reviews.map((item) => (
                     <div key={item._id} className="review-item">
                         <h3>{item.name}</h3>
                         <p>{item.review}</p>
-                        <button onClick={() => handleEdit(item)}>Edit</button>
-                        <button onClick={() => handleDelete(item._id)}>Delete</button>
+                        {item.image && <img src={item.image} alt={`${item.name}'s review`} />}
                     </div>
                 ))
             ) : (
